@@ -1,22 +1,29 @@
 const mongoose = require("mongoose");
 
 const earningSchema = new mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    amount: {
-        type: Number,
+    referredUserId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    type: {
-        type: String,
-        enum: ['Direct', 'Indirect']
+    transactionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Transaction',
+        required: true
     },
-    date: {
-        type: Date,
-        default: Date.now
+    level: {
+        type: Number,
+        enum: [1, 2],
+        required: true
+    },
+    profitAmount: {
+        type: Number,
+        required: true
     }
 }, {
     timestamps: true

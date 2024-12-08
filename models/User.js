@@ -10,17 +10,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         index: {unique: true}
     },
-    referralCode: {
-        type: String,
-        index: {unique: true}
-    },
     referredBy: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         default: null
     },
-    directReferrals: {
-        type: [String],
-        default: []
+    referralCount: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true
