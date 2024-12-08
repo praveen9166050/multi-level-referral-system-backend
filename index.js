@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const CustomError = require("./utils/customError");
 const errorHandler = require("./middlewares/errorHandler");
+const usersRouter = require("./routes/users");
+const earningsRouter = require("./routes/earnings");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +17,9 @@ app.get('/', (req, res) => {
         message: "Hello, World!"
     });
 });
+
+app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/earnings', earningsRouter);
 
 app.use('*', (req, res, next) => {
     throw new CustomError(404, "Route does not exist");
