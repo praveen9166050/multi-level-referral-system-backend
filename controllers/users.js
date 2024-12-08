@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
 const CustomError = require("../utils/customError");
+const { sendUpdate } = require("../configs/websocket");
 
 const createUser = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -25,6 +26,7 @@ const createUser = async (req, res, next) => {
         const user = await User.create({name, email, referredBy});
         await session.commitTransaction();
         await session.endSession();
+        sendUpdate(referredBy, {type: 'register', message: `${name} (${email}) registered through your referral`});
         res.status(201).json({
             success: true,
             message: "User created successfully",
