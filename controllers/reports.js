@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Earning = require("../models/Earning");
+const User = require("../models/User");
+const CustomError = require("../utils/customError");
 
 const getEarningsReport = async (req, res, next) => {
     try {
@@ -77,9 +79,21 @@ const getReferralDistribution = async (req, res, next) => {
 
 const getReferralTree = async (req, res, next) => {
     try {
+        const {userId} = req.params;
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new CustomError(400, "User with this id does not exist");
+        }
+        const tree = await user.populate({
+            path: 'referredBy',
+            populate: {
+                path: 'referredBy'
+            }
+        });
         res.status(200).json({
             success: true,
-            message: "Referral tree fetched successfully"
+            message: "Referral tree fetched successfully",
+            tree
         });
     } catch (error) {
         next(error);
