@@ -12,7 +12,7 @@ const createUser = async (req, res, next) => {
             throw new CustomError(400, "Email is already registered");
         }
         if (referredBy) {
-            const parentUser = await User.findOne({referredBy});
+            const parentUser = await User.findById(referredBy);
             if (!parentUser) {
                 throw new CustomError(400, "Parent user with this id does not exist");
             }

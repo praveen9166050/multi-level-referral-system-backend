@@ -21,7 +21,7 @@ const earningSchema = new mongoose.Schema({
         enum: [1, 2],
         required: true
     },
-    profitAmount: {
+    profit: {
         type: Number,
         required: true
     }
@@ -29,6 +29,6 @@ const earningSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Earning = mongoose.model('User', earningSchema);
+const Earning = mongoose.model('Earning', earningSchema);
 
 module.exports = Earning;
