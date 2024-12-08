@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
 const CustomError = require("../utils/customError");
-const generateReferralCode = require("../utils/generateReferralCode");
 
 const createUser = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -13,23 +12,22 @@ const createUser = async (req, res, next) => {
             throw new CustomError(400, "Email is already registered");
         }
         if (referredBy) {
-            const parent = await User.findOne({referralCode: referredBy});
-            if (!parent) {
-                throw new CustomError(400, "Invalid referral code");
+            const parentUser = await User.findOne({referredBy});
+            if (!parentUser) {
+                throw new CustomError(400, "Parent user with this id does not exist");
             }
-            if (parent.directReferrals.length > 8) {
-                throw new CustomError(400, "Limit exceeded for this referral code");
+            if (parentUser.referralCount > 8) {
+                throw new CustomError(400, "Referral limit exceeded");
             }
-            parent.directReferrals.push(email);
-            await parent.save();
+            parentUser.referralCount += 1;
+            await parentUser.save();
         }
-        const referralCode = await generateReferralCode();
-        const user = await User.create({name, email, referralCode, referredBy});
+        const user = await User.create({name, email, referredBy});
         await session.commitTransaction();
         await session.endSession();
         res.status(201).json({
             success: true,
-            message: "User added successfully",
+            message: "User created successfully",
             user
         });
     } catch (error) {
