@@ -33,7 +33,7 @@ const addUser = async (req, res, next) => {
             user
         });
     } catch (error) {
-await session.abortTransaction();
+        await session.abortTransaction();
         await session.endSession();
         next(error);
     }
@@ -41,9 +41,11 @@ await session.abortTransaction();
 
 const getUsers = async (req, res, next) => {
     try {
+        const users = await User.find({});
         res.status(201).json({
             success: true,
-            message: "Users fetched successfully"
+            message: "Users fetched successfully",
+            users
         });
     } catch (error) {
         next(error);
