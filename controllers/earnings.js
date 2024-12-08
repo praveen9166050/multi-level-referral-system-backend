@@ -1,3 +1,4 @@
+const { sendUpdate } = require("../configs/websocket");
 const Earning = require("../models/Earning");
 const Transaction = require("../models/TransactionModel");
 const User = require("../models/User");
@@ -17,6 +18,7 @@ const createTransaction = async (req, res, next) => {
                 message: "Transaction successful"
             });
         }
+        const notifications = [];
         const parentUser = user.referredBy;
         if (parentUser) {
             await Earning.create({
@@ -25,6 +27,10 @@ const createTransaction = async (req, res, next) => {
                 transactionId: transaction._id,
                 level: 1,
                 profit: 0.05 * amount,
+            });
+            notifications.push({
+                userId: parentUser._id.toString(),
+                message: `You earned ₹ ${0.05 * amount} from your direct referral's transaction`
             });
             const grandParentUser = await User.findById(parentUser.referredBy).populate('referredBy');
             if (grandParentUser) {
@@ -35,8 +41,13 @@ const createTransaction = async (req, res, next) => {
                     level: 2,
                     profit: 0.01 * amount,
                 });
+                notifications.push({
+                    userId: grandParentUser._id.toString(),
+                    message: `You earned ₹ ${0.01 * amount} from your indirect referral's transaction`
+                });
             }
         }
+        notifications.forEach(({userId, message}) => sendUpdate(userId, {type: "earning", message}))
         res.status(201).json({
             success: true,
             message: "Transaction successful"

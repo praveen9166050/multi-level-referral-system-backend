@@ -5,6 +5,8 @@ const errorHandler = require("./middlewares/errorHandler");
 const usersRouter = require("./routes/users");
 const earningsRouter = require("./routes/earnings");
 const reportsRouter = require("./routes/reports");
+const http = require('http');
+const { initWebSocket } = require("./configs/websocket");
 require("dotenv").config();
 
 const app = express();
@@ -29,10 +31,13 @@ app.use('*', (req, res, next) => {
 
 app.use(errorHandler);
 
+const server = http.createServer(app);
+
 mongoose
 .connect(process.env.MONGO_URI)
 .then(() => {
-    app.listen(port, () => {
+    initWebSocket(server);
+    server.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
     });
 })
