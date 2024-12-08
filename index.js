@@ -4,6 +4,7 @@ const CustomError = require("./utils/customError");
 const errorHandler = require("./middlewares/errorHandler");
 const usersRouter = require("./routes/users");
 const earningsRouter = require("./routes/earnings");
+const reportsRouter = require("./routes/reports");
 require("dotenv").config();
 
 const app = express();
@@ -18,8 +19,9 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/earnings', earningsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/earnings', earningsRouter);
+app.use('/api/reports', reportsRouter);
 
 app.use('*', (req, res, next) => {
     throw new CustomError(404, "Route does not exist");

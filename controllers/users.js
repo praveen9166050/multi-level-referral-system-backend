@@ -3,7 +3,7 @@ const User = require("../models/User");
 const CustomError = require("../utils/customError");
 const generateReferralCode = require("../utils/generateReferralCode");
 
-const addUser = async (req, res, next) => {
+const createUser = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -39,17 +39,4 @@ const addUser = async (req, res, next) => {
     }
 }
 
-const getUsers = async (req, res, next) => {
-    try {
-        const users = await User.find({});
-        res.status(201).json({
-            success: true,
-            message: "Users fetched successfully",
-            users
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
-module.exports = {addUser, getUsers};
+module.exports = {createUser};

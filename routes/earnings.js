@@ -1,9 +1,8 @@
 const express = require("express");
-const { calculateEarning, getEarnings } = require("../controllers/earnings");
+const { createTransaction } = require("../controllers/earnings");
 
 const router = express.Router();
 
-router.route('/').post(calculateEarning);
-router.route('/:userId').get(getEarnings);
+router.route('/transaction').post(createTransaction);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const calculateEarning = async (req, res, next) => {
+const createTransaction = async (req, res, next) => {
     try {
         res.status(201).json({
             success: true,
@@ -9,15 +9,4 @@ const calculateEarning = async (req, res, next) => {
     }
 }
 
-const getEarnings = async (req, res, next) => {
-    try {
-        res.status(201).json({
-            success: true,
-            message: "Earnings fetched successfully"
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
-module.exports = {calculateEarning, getEarnings};
+module.exports = {createTransaction};
