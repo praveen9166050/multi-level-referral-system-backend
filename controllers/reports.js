@@ -38,9 +38,37 @@ const getEarningsReport = async (req, res, next) => {
 
 const getReferralDistribution = async (req, res, next) => {
     try {
+        const {userId} = req.params;
+        const referrals = await Earning.aggregate([
+            {
+                $match: {userId: new mongoose.Types.ObjectId(userId)}
+            },
+            {
+                $group: {
+                    _id: '$referredUserId',
+                    totalEarnings: {$sum: '$profit'}
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'referredUser',
+                    pipeline: [{$project: {name: 1, email: 1}}]
+                }
+            },
+            {
+                $project: {
+                    referredUser: {$arrayElemAt: ['$referredUser' , 0]},
+                    totalEarnings: 1
+                }
+            }
+        ]);
         res.status(200).json({
             success: true,
-            message: "Referral distribution fetched successfully"
+            message: "Referral distribution fetched successfully",
+            referrals
         });
     } catch (error) {
         next(error);
