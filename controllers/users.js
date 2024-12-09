@@ -17,7 +17,7 @@ const createUser = async (req, res, next) => {
             if (!parentUser) {
                 throw new CustomError(400, "Parent user with this id does not exist");
             }
-            if (parentUser.referralCount > 8) {
+            if (parentUser.referralCount >= 8) {
                 throw new CustomError(400, "Referral limit exceeded");
             }
             parentUser.referralCount += 1;
