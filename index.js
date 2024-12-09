@@ -12,6 +12,7 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Middlewares
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -21,22 +22,25 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/api/users', usersRouter);
-app.use('/api/earnings', earningsRouter);
-app.use('/api/reports', reportsRouter);
-
+// Routes
+app.use('/api/users', usersRouter); // Register a user
+app.use('/api/earnings', earningsRouter); // Create a transaction
+app.use('/api/reports', reportsRouter); // Reports and analytics
 app.use('*', (req, res, next) => {
     throw new CustomError(404, "Route does not exist");
 });
 
+// Error handling
 app.use(errorHandler);
 
 const server = http.createServer(app);
 
+// MongoDB connection
 mongoose
 .connect(process.env.MONGO_URI)
 .then(() => {
-    initWebSocket(server);
+    initWebSocket(server); // WebSocket connection
+    // Start server
     server.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
     });

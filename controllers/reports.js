@@ -6,6 +6,7 @@ const CustomError = require("../utils/customError");
 const getEarningsReport = async (req, res, next) => {
     try {
         const {userId} = req.params;
+        // Calculate total earnings for a user through referrals
         const totalEarnings = await Earning.aggregate([
             {
                 $group: {
@@ -14,6 +15,7 @@ const getEarningsReport = async (req, res, next) => {
                 }
             }
         ]);
+        // Calculate total earnings for a user through referrals at each level (direct and indirect)
         const levelWiseEarnings = await Earning.aggregate([
             {
                 $match: {userId: new mongoose.Types.ObjectId(userId)}
@@ -25,6 +27,7 @@ const getEarningsReport = async (req, res, next) => {
                 }
             }
         ]);
+        // Fetch history of eranings through referrals of a user
         const earningsHistory = await Earning.find({userId}).sort({createdAt: -1});
         res.status(200).json({
             success: true,
@@ -41,6 +44,7 @@ const getEarningsReport = async (req, res, next) => {
 const getReferralDistribution = async (req, res, next) => {
     try {
         const {userId} = req.params;
+        // Fetch total earnings of a user through each referred user
         const referrals = await Earning.aggregate([
             {
                 $match: {userId: new mongoose.Types.ObjectId(userId)}
@@ -84,6 +88,7 @@ const getReferralTree = async (req, res, next) => {
         if (!user) {
             throw new CustomError(400, "User with this id does not exist");
         }
+        // Fetch referral hierarchy tree of a user
         const tree = await user.populate({
             path: 'referredBy',
             populate: {
