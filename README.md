@@ -24,3 +24,22 @@ This project implements a multi-level referral and earning system with real-time
 - **Database**: MongoDB with Mongoose
 - **Real-Time Notifications**: WebSocket (ws)
 - **Tools**: Postman for API testing and real time notification testing
+
+---
+
+## Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/multi-level-referral-system.git
+   cd multi-level-referral-system-backend
+2. **Installation**:
+   ```bash
+   npm install
+3. **Set up the environment variables**: Create a .env file in the root directory with the following content:
+   ```bash
+   PORT=3000
+   MONGO_URI=mongodb://localhost:27017/referralSystem
+4. **Start thr server**
+   ```bash
+   npm start
