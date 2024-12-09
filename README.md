@@ -40,6 +40,6 @@ This project implements a multi-level referral and earning system with real-time
    ```bash
    PORT=3000
    MONGO_URI=mongodb://localhost:27017/referralSystem
-4. **Start thr server**
+4. **Start the server**: Make sure your MongoDB is running
    ```bash
    npm start
